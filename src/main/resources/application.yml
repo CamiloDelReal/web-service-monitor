@@ -1,0 +1,53 @@
+server:
+  port: 10000
+
+spring:
+  application:
+    name: web-service-monitor
+
+management:
+  health:
+    diskspace:
+      enabled: false
+    ping:
+      enabled: false
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+
+monitor:
+  schedule: "00 30 * * * *"
+  targets:
+    web-services:
+      enabled: true
+      sources:
+        - tag: jellyfin
+          url: http://localhost:8096/health
+    storages:
+      enabled: true
+      sources:
+        - tag: main-drive
+          path: /Users/darklink
+          threshold: 1000GB
+  alerts:
+    email:
+      enabled: false
+      template:
+        from: <SENDER-EMAIL-HERE>
+        subject: "Web Service Monitor Alert"
+      server:
+        host: smtp.gmail.com
+        port: 587
+        username: <SENDER-USERNAME-HERE>
+        password: <SENDER-PASSWORD-HERE>
+      recipients:
+        - email: <YOUR-EMAIL-HERE>
+    sms:
+      enabled: false
+      provider:
+        sid: <TWILIO-SID-HERE>
+        token: <TWILIO-TOKEN-HERE>
+        number: <TWILIO-PHONE-NUMBER-HERE>
+      phone-numbers:
+        - number: <YOUR-NUMBER-HERE>
